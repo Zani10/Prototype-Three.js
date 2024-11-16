@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useGLTF, OrbitControls } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { Vector3 } from 'three';
+import { Vector3, Color } from 'three';
 
 const ModelViewer = ({ modelPath, view, leftDoorOpen, rightDoorOpen }) => {
   if (!modelPath) return null;
@@ -14,15 +14,22 @@ const ModelViewer = ({ modelPath, view, leftDoorOpen, rightDoorOpen }) => {
   const orbitControlsRef = useRef();
 
   useEffect(() => {
-    // Locate doors and steering wheel in the model
+    // doors, steering wheel, and lights
     scene.traverse((object) => {
       if (object.name === 'left-door') leftDoorRef.current = object;
       else if (object.name === 'right-door') rightDoorRef.current = object;
       else if (object.name === 'steering_wheel') steeringWheelRef.current = object;
+      
+      
+      if (object.name === 'light_lights_0' || object.name === 'light up_lights_0') {
+        object.intensity = 5; 
+        object.color = new Color('#ffffff'); 
+        object.castShadow = true; 
+      }
     });
   }, [scene]);
 
-  // Apply door rotations based on props
+  // door rotation
   useEffect(() => {
     if (leftDoorRef.current) {
       leftDoorRef.current.rotation.y = leftDoorOpen ? -Math.PI / 3 : 0;
@@ -32,11 +39,11 @@ const ModelViewer = ({ modelPath, view, leftDoorOpen, rightDoorOpen }) => {
     }
   }, [leftDoorOpen, rightDoorOpen]);
 
-  // Set camera position when view changes
+  // camera position when view changes
   useEffect(() => {
     if (view === "outside") {
-      camera.position.set(5, 2.5, 5); // Outside view
-      orbitControlsRef.current.target.set(0, 1, 0); // Target center of the model
+      camera.position.set(5, 2.5, 5); 
+      orbitControlsRef.current.target.set(0, 1, 0); 
     } else if (view === "inside" && steeringWheelRef.current) {
       const steeringWheelPosition = new Vector3();
       steeringWheelRef.current.getWorldPosition(steeringWheelPosition);
@@ -44,19 +51,18 @@ const ModelViewer = ({ modelPath, view, leftDoorOpen, rightDoorOpen }) => {
       // Set camera in front of the steering wheel
       camera.position.set(
         steeringWheelPosition.x + -1,
-        steeringWheelPosition.y + 0.2, // Slightly above the wheel
-        steeringWheelPosition.z + 0  // In front of the wheel
+        steeringWheelPosition.y + 0.2, 
+        steeringWheelPosition.z + 0  
       );
-      orbitControlsRef.current.target.copy(steeringWheelPosition); // Set target to steering wheel
+      orbitControlsRef.current.target.copy(steeringWheelPosition);
     }
 
-    camera.lookAt(orbitControlsRef.current.target); // Ensure the camera looks at the target
-    orbitControlsRef.current.update(); // Update controls to apply new target
+    camera.lookAt(orbitControlsRef.current.target); 
+    orbitControlsRef.current.update(); 
   }, [view, camera]);
 
   return (
     <>
-      {/* Model and persistent OrbitControls */}
       <primitive object={scene} scale={1.5} />
       <OrbitControls
         ref={orbitControlsRef}

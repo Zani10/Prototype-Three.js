@@ -16,19 +16,17 @@ const InteractiveRoom = () => {
 
   return (
     <primitive object={scene}>
-      {/* Example interactive lamp */}
       <mesh
         onClick={toggleLamp}
-        position={[1, 2, 0]} // Change position according to your model's layout
+        position={[1, 2, 0]} 
       >
         <sphereGeometry args={[0.1, 32, 32]} />
         <meshStandardMaterial color={isLampOn ? 'yellow' : 'gray'} />
       </mesh>
 
-      {/* Example interactive door */}
       <mesh
         onClick={toggleDoor}
-        position={[-1, 0, 0]} // Adjust position based on the room's layout
+        position={[-1, 0, 0]} 
       >
         <boxGeometry args={[0.2, 1, 2]} />
         <meshStandardMaterial color={isDoorOpen ? 'brown' : 'darkgray'} />
