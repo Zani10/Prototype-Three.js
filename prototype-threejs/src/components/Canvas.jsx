@@ -11,19 +11,11 @@ const ThreeCanvas = ({ children }) => {
   return (
     <Canvas camera={{ position: [0, 2, 8], fov: 50 }} shadows className="absolute inset-0">
       <ambientLight intensity={0.2} />
-      <spotLight position={[5, 10, 5]} intensity={1.5} angle={0.3} penumbra={1} castShadow />
-      <spotLight position={[-5, 10, 5]} intensity={1.5} angle={0.3} penumbra={1} castShadow />
-      
-      {/* Reflective Floor */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-        <planeGeometry args={[20, 20]} />
-        <meshStandardMaterial color="#111111" roughness={0.3} metalness={0.8} />
-      </mesh>
 
       {/* Showroom */}
       <Showroom />
 
-      {/* Load Children */}
+      {/* Load Children/cars */}
       {children}
 
       {/* Camera Controls */}

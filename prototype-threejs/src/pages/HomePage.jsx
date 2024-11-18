@@ -37,7 +37,7 @@ const HomePage = () => {
       </div>
 
       {/* Title */}
-      <h1 className="absolute top-4 left-4 text-xl font-bold z-10">InterCar</h1>
+      <h1 className="absolute top-4 left-4 text-3xl font-bold z-10">InterCar</h1>
 
       {/* Object List */}
       <div className="absolute top-4 right-4 bg-gray-800 bg-opacity-80 p-4 rounded-md shadow-lg w-64 z-10">
