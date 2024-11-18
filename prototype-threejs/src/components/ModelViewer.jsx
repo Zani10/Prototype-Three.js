@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useGLTF, OrbitControls } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { Vector3, Color } from 'three';
@@ -12,34 +12,46 @@ const ModelViewer = ({ modelPath, view, leftDoorOpen, rightDoorOpen }) => {
   const steeringWheelRef = useRef(null);
   const { camera } = useThree();
   const orbitControlsRef = useRef();
+  const [lightPanels, setLightPanels] = useState([]);
 
   useEffect(() => {
-    // doors, steering wheel, and lights
+    //  doors, steering wheel, and lights
+    const lights = [];
     scene.traverse((object) => {
       if (object.name === 'left-door') leftDoorRef.current = object;
-      else if (object.name === 'right-door') rightDoorRef.current = object;
-      else if (object.name === 'steering_wheel') steeringWheelRef.current = object;
-      
-      
-      if (object.name === 'light_lights_0' || object.name === 'light up_lights_0') {
-        object.intensity = 5; 
-        object.color = new Color('#ffffff'); 
-        object.castShadow = true; 
-      }
+      if (object.name === 'right-door') rightDoorRef.current = object;
+      if (object.name === 'steering_wheel') steeringWheelRef.current = object;
+      if (object.name.includes('light_panel')) lights.push(object); // Adjust name based on the model
     });
+    setLightPanels(lights);
+
+    scene.rotation.y = -Math.PI / 6; 
   }, [scene]);
 
   // door rotation
   useEffect(() => {
-    if (leftDoorRef.current) {
-      leftDoorRef.current.rotation.y = leftDoorOpen ? -Math.PI / 3 : 0;
-    }
-    if (rightDoorRef.current) {
-      rightDoorRef.current.rotation.y = rightDoorOpen ? Math.PI / 3 : 0;
-    }
+    const smoothRotate = (door, targetAngle) => {
+      if (!door) return;
+      const duration = 300; 
+      const step = 10; 
+      const angleStep = (targetAngle - door.rotation.y) / step;
+      let currentStep = 0;
+
+      const interval = setInterval(() => {
+        if (currentStep < step) {
+          door.rotation.y += angleStep;
+          currentStep++;
+        } else {
+          clearInterval(interval); 
+        }
+      }, duration / step);
+    };
+
+    smoothRotate(leftDoorRef.current, leftDoorOpen ? -Math.PI / 3 : 0);
+    smoothRotate(rightDoorRef.current, rightDoorOpen ? Math.PI / 3 : 0);
   }, [leftDoorOpen, rightDoorOpen]);
 
-  // camera position when view changes
+  // camera position
   useEffect(() => {
     if (view === "outside") {
       camera.position.set(5, 2.5, 5); 
@@ -48,18 +60,30 @@ const ModelViewer = ({ modelPath, view, leftDoorOpen, rightDoorOpen }) => {
       const steeringWheelPosition = new Vector3();
       steeringWheelRef.current.getWorldPosition(steeringWheelPosition);
 
-      // Set camera in front of the steering wheel
+      // camera in front of steering wheel
       camera.position.set(
-        steeringWheelPosition.x + -1,
-        steeringWheelPosition.y + 0.2, 
-        steeringWheelPosition.z + 0  
+        steeringWheelPosition.x - 1,
+        steeringWheelPosition.y + 0.2,
+        steeringWheelPosition.z
       );
       orbitControlsRef.current.target.copy(steeringWheelPosition);
     }
 
-    camera.lookAt(orbitControlsRef.current.target); 
-    orbitControlsRef.current.update(); 
+    camera.lookAt(orbitControlsRef.current.target);
+    orbitControlsRef.current.update();
   }, [view, camera]);
+
+  
+  const toggleLight = (index) => {
+    const light = lightPanels[index];
+    if (light) light.visible = !light.visible;
+  };
+
+  
+  const changeLightColor = (index, color) => {
+    const light = lightPanels[index];
+    if (light && light.material) light.material.color = new Color(color);
+  };
 
   return (
     <>
@@ -71,6 +95,25 @@ const ModelViewer = ({ modelPath, view, leftDoorOpen, rightDoorOpen }) => {
         enableRotate={true}
         makeDefault
       />
+
+      {/* Light Controls UI */}
+      <div className="absolute bottom-10 left-10 space-y-4 bg-gray-800 bg-opacity-70 p-4 rounded-lg">
+        {lightPanels.map((_, index) => (
+          <div key={index} className="flex items-center space-x-2">
+            <button
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow"
+              onClick={() => toggleLight(index)}
+            >
+              Toggle Light {index + 1}
+            </button>
+            <input
+              type="color"
+              onChange={(e) => changeLightColor(index, e.target.value)}
+              className="w-8 h-8 rounded border-none"
+            />
+          </div>
+        ))}
+      </div>
     </>
   );
 };

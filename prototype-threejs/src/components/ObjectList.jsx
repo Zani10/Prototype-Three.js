@@ -1,22 +1,20 @@
 import React from 'react';
 
 const ObjectList = ({ onSelectModel, models }) => {
-  const predefinedModels = [
-    { name: 'Retro Car', path: '/assets/retro.glb' }
-  ];
-
+  const predefinedModels = [{ name: 'Retro Car', path: '/assets/retro.glb' }];
   const allModels = [...predefinedModels, ...models];
 
   return (
-    <div className="object-list space-y-4">
-      <ul className="divide-y divide-gray-700 mt-3">
+    <div className="space-y-6">
+      <h2 className="text-lg font-semibold mb-4">Available Models</h2>
+      <ul className="divide-y divide-gray-600">
         {allModels.map((model, index) => (
           <li
             key={index}
-            className="mt-3 cursor-pointer bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-md shadow-md transition duration-150 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
+            className="cursor-pointer bg-gradient-to-r from-gray-700 to-gray-800 text-white p-4 rounded-md shadow-lg transition transform hover:scale-105 hover:shadow-xl"
             onClick={() => onSelectModel(model.path)}
           >
-            <span className="font-semibold">{model.name}</span>
+            <span className="font-medium">{model.name}</span>
           </li>
         ))}
       </ul>
