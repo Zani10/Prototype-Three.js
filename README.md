@@ -113,9 +113,19 @@ Follow these steps to set up the project on your local machine.
 ## Sources and References
 
 - **React Three Fiber Documentation**: https://docs.pmnd.rs/react-three-fiber/getting-started/introduction
-- **Three.js Documentation**: https://threejs.org/docs/
-- **React Drei**: 
+- **Three.js Documentation**:
+   - https://threejs.org/docs/
+   - https://www.tutorialspoint.com/threejs/threejs_orbit_controls.htm 
+- **React Drei**:
+   - https://r3f.docs.pmnd.rs/getting-started/introduction 
 - **Blender for 3D Models**: https://www.blender.org/
-- **YouTube Tutorials**: 
+- **YouTube Tutorials**:
+  - https://www.youtube.com/watch?v=kt0FrkQgw8w
   - https://www.youtube.com/watch?v=pUgWfqWZWmM
-- **ChatGPT Chat link**: 
+- **ChatGPT Chat link**:
+  - https://chatgpt.com/share/673be65c-000c-800f-a86e-e9e7ade1bb05 
+
+## Credit to 3D models
+- https://sketchfab.com/3d-models/cartoon-sports-car-0fd87559642a41b7a7924876ad3e9399 from RCC Design ![image](https://github.com/user-attachments/assets/577e438e-edb7-42dd-9125-7b080971713e)
+- https://sketchfab.com/3d-models/studio-v1-for-car-9c45d19a7d434e2ca1640d6d2146e895 from Velocity Motion ![image](https://github.com/user-attachments/assets/2f4aa35b-2be4-48ed-be45-8ad48bfc0f0c)
+
